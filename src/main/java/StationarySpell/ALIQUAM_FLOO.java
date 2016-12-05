@@ -1,7 +1,9 @@
 package StationarySpell;
 
-import java.util.List;
-
+import me.cakenggt.Ollivanders.Ollivanders;
+import me.cakenggt.Ollivanders.StationarySpellObj;
+import me.cakenggt.Ollivanders.StationarySpells;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -12,11 +14,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.Effect;
 
-import me.cakenggt.Ollivanders.Ollivanders;
-import me.cakenggt.Ollivanders.StationarySpellObj;
-import me.cakenggt.Ollivanders.StationarySpells;
+import java.util.List;
 
 /**Stays in the fireplace and makes the floo network work
  * @author lownes
