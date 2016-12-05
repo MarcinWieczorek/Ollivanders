@@ -1,8 +1,8 @@
 package Spell;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import me.cakenggt.Ollivanders.Ollivanders;
+import me.cakenggt.Ollivanders.SpellProjectile;
+import me.cakenggt.Ollivanders.Spells;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
@@ -10,60 +10,64 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 
-import me.cakenggt.Ollivanders.Ollivanders;
-import me.cakenggt.Ollivanders.SpellProjectile;
-import me.cakenggt.Ollivanders.Spells;
+import java.util.HashSet;
+import java.util.Set;
 
-/**Burns sun-sensitive entities with a radius
- * @author lownes
+/**
+ * Burns sun-sensitive entities with a radius
  *
+ * @author lownes
  */
 public class LUMOS_SOLEM extends SpellProjectile implements Spell {
-
 	boolean move = true;
-	Set<Block> blocks = new HashSet<Block>();
+	Set<Block> blocks = new HashSet<>();
 
-	public LUMOS_SOLEM(Ollivanders plugin, Player player, Spells name,
-			Double rightWand) {
+	public LUMOS_SOLEM(Ollivanders plugin, Player player, Spells name, Double rightWand) {
 		super(plugin, player, name, rightWand);
 	}
 
 	@Override
 	public void checkEffect() {
-		if (move){
+		if(move) {
 			move();
-			if (getBlock().getType() != Material.AIR && getBlock().getType() != Material.FIRE && getBlock().getType() != Material.WATER && getBlock().getType() != Material.STATIONARY_WATER){
-				for (LivingEntity live : getLivingEntities(usesModifier)){
+
+			if(getBlock().getType() != Material.AIR && getBlock().getType() != Material.FIRE && getBlock().getType() != Material.WATER && getBlock().getType() != Material.STATIONARY_WATER) {
+				for(LivingEntity live : getLivingEntities(usesModifier)) {
 					boolean burn = false;
-					if (live.getType() == EntityType.ZOMBIE){
-						Zombie zombie = (Zombie)live;
-						if (!zombie.isBaby()){
+
+					if(live.getType() == EntityType.ZOMBIE) {
+						Zombie zombie = (Zombie) live;
+						if(!zombie.isBaby()) {
 							burn = true;
 						}
 					}
-					if (live.getType() == EntityType.SKELETON){
+
+					if(live.getType() == EntityType.SKELETON) {
 						burn = true;
 					}
-					if (burn){
+
+					if(burn) {
 						live.setFireTicks(160);
 					}
 				}
+
 				kill = false;
 				move = false;
-				for (Block block : getBlocksInRadius(location, usesModifier)){
-					if (block.getType() == Material.AIR){
+
+				for(Block block : getBlocksInRadius(location, usesModifier)) {
+					if(block.getType() == Material.AIR) {
 						blocks.add(block);
 						block.setType(Material.GLOWSTONE);
 					}
 				}
 			}
 		}
-		else{
+		else {
 			kill();
-			for (Block block : blocks){
+
+			for(Block block : blocks) {
 				block.setType(Material.AIR);
 			}
 		}
 	}
-
 }

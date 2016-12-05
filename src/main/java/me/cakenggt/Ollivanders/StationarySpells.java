@@ -2,7 +2,6 @@ package me.cakenggt.Ollivanders;
 
 /**
  * Represents allowable stationary spells.
- *
  */
 public enum StationarySpells {
 	ALIQUAM_FLOO,
@@ -18,5 +17,5 @@ public enum StationarySpells {
 	PROTEGO_MAXIMA,
 	PROTEGO_TOTALUM,
 	REPELLO_MUGGLETON,
-	SPONGIFY;
+	SPONGIFY
 }

@@ -1,15 +1,14 @@
 package Effect;
 
-import org.bukkit.entity.Player;
-
 import me.cakenggt.Ollivanders.Effects;
 import me.cakenggt.Ollivanders.OEffect;
 import me.cakenggt.Ollivanders.Ollivanders;
+import org.bukkit.entity.Player;
 
 public class BARUFFIOS_BRAIN_ELIXIR extends OEffect implements Effect {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 8344150682258820456L;
 

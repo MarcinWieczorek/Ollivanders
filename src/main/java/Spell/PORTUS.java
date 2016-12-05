@@ -1,101 +1,101 @@
 package Spell;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import me.cakenggt.Ollivanders.CompatibleSound;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.meta.ItemMeta;
-
 import me.cakenggt.Ollivanders.Ollivanders;
 import me.cakenggt.Ollivanders.SpellProjectile;
 import me.cakenggt.Ollivanders.Spells;
 import me.cakenggt.Ollivanders.StationarySpellObj;
+import org.bukkit.Location;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.ItemMeta;
 
-public class PORTUS extends SpellProjectile implements Spell{
+import java.util.ArrayList;
+import java.util.List;
 
+public class PORTUS extends SpellProjectile implements Spell {
 	private final String[] wordsArray;
 
-	public PORTUS(Ollivanders plugin, Player player, Spells name,
-			Double rightWand, String[] wordsArray) {
+	public PORTUS(Ollivanders plugin, Player player, Spells name, Double rightWand, String[] wordsArray) {
 		super(plugin, player, name, rightWand);
 		this.wordsArray = wordsArray;
 	}
 
-	public PORTUS(Ollivanders plugin, Player player, Spells name,
-			Double rightWand) {
+	public PORTUS(Ollivanders plugin, Player player, Spells name, Double rightWand) {
 		super(plugin, player, name, rightWand);
 		Location loc = player.getLocation();
 		wordsArray = new String[4];
 		wordsArray[0] = "portus";
-		wordsArray[1] = Double.toString(((int)loc.getX()));
-		wordsArray[2] = Double.toString(((int)loc.getY()));
-		wordsArray[3] = Double.toString(((int)loc.getZ()));
+		wordsArray[1] = Double.toString(((int) loc.getX()));
+		wordsArray[2] = Double.toString(((int) loc.getY()));
+		wordsArray[3] = Double.toString(((int) loc.getZ()));
 	}
 
 	public void checkEffect() {
 		move();
-		for (Item item : getItems(1)){
+
+		for(Item item : getItems(1)) {
 			boolean canApparateOut = true;
-			for (StationarySpellObj stat : p.getStationary()){
-				if (stat instanceof StationarySpell.NULLUM_EVANESCUNT && stat.isInside(player.getLocation()) && stat.active && !stat.getPlayerUUID().equals(player.getUniqueId())){
+
+			for(StationarySpellObj stat : p.getStationary()) {
+				if(stat instanceof StationarySpell.NULLUM_EVANESCUNT && stat.isInside(player.getLocation()) && stat.active && !stat.getPlayerUUID().equals(player.getUniqueId())) {
 					stat.flair(10);
 					canApparateOut = false;
 					player.getWorld().playSound(player.getLocation(), CompatibleSound.NOTE_PIANO, 1, 1);
 				}
 			}
-			if (player.isPermissionSet("Ollivanders.BYPASS")){
-				if (player.hasPermission("Ollivanders.BYPASS")){
-					canApparateOut = true;
-				}
+
+			if(player.isPermissionSet("Ollivanders.BYPASS") && player.hasPermission("Ollivanders.BYPASS")) {
+				canApparateOut = true;
 			}
-			if (canApparateOut){
+
+			if(canApparateOut) {
 				Location to;
-				if (wordsArray.length == 4){
+
+				if(wordsArray.length == 4) {
 					try {
-						to = new Location(player.getWorld(),
-								Double.parseDouble(wordsArray[1]),
-								Double.parseDouble(wordsArray[2]),
-								Double.parseDouble(wordsArray[3]));
-					} catch (NumberFormatException e) {
+						to = new Location(player.getWorld(), Double.parseDouble(wordsArray[1]), Double.parseDouble(wordsArray[2]), Double.parseDouble(wordsArray[3]));
+					}
+					catch(NumberFormatException e) {
 						to = player.getLocation().clone();
 					}
 				}
-				else{
+				else {
 					to = player.getLocation().clone();
 				}
+
 				boolean canApparateIn = true;
-				for (StationarySpellObj stat : p.getStationary()){
-					if (stat instanceof StationarySpell.NULLUM_APPAREBIT && stat.isInside(to) && stat.active && !stat.getPlayerUUID().equals(player.getUniqueId())){
+
+				for(StationarySpellObj stat : p.getStationary()) {
+					if(stat instanceof StationarySpell.NULLUM_APPAREBIT && stat.isInside(to) && stat.active && !stat.getPlayerUUID().equals(player.getUniqueId())) {
 						stat.flair(10);
 						canApparateIn = false;
 						player.getWorld().playSound(player.getLocation(), CompatibleSound.NOTE_BASS, 1, 1);
 					}
 				}
-				if (player.isPermissionSet("Ollivanders.BYPASS")){
-					if (player.hasPermission("Ollivanders.BYPASS")){
-						canApparateIn = true;
-					}
+
+				if(player.isPermissionSet("Ollivanders.BYPASS") && player.hasPermission("Ollivanders.BYPASS")) {
+					canApparateIn = true;
 				}
-				if (canApparateIn) {
+
+				if(canApparateIn) {
 					ItemMeta meta = item.getItemStack().getItemMeta();
 					List<String> lore;
-					if (meta.hasLore()){
+
+					if(meta.hasLore()) {
 						lore = meta.getLore();
 					}
-					else{
-						lore = new ArrayList<String>();
+					else {
+						lore = new ArrayList<>();
 					}
+
 					lore.add("Portkey " + to.getWorld().getUID() + " " + Double.toString(to.getX()) + " " + Double.toString(to.getY()) + " " + Double.toString(to.getZ()));
 					meta.setLore(lore);
 					item.getItemStack().setItemMeta(meta);
 				}
 			}
+
 			kill();
 		}
 	}
-
 }

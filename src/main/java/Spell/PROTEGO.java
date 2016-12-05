@@ -1,16 +1,13 @@
 package Spell;
 
-import org.bukkit.entity.Player;
-
 import me.cakenggt.Ollivanders.Ollivanders;
 import me.cakenggt.Ollivanders.SpellProjectile;
 import me.cakenggt.Ollivanders.Spells;
 import me.cakenggt.Ollivanders.StationarySpells;
+import org.bukkit.entity.Player;
 
-public class PROTEGO extends SpellProjectile implements Spell{
-
-	public PROTEGO(Ollivanders plugin, Player player, Spells name,
-			Double rightWand) {
+public class PROTEGO extends SpellProjectile implements Spell {
+	public PROTEGO(Ollivanders plugin, Player player, Spells name, Double rightWand) {
 		super(plugin, player, name, rightWand);
 	}
 
@@ -20,5 +17,4 @@ public class PROTEGO extends SpellProjectile implements Spell{
 		p.addStationary(protego);
 		kill();
 	}
-	
 }

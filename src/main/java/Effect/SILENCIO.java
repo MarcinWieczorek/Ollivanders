@@ -1,15 +1,14 @@
 package Effect;
 
-import org.bukkit.entity.Player;
-
 import me.cakenggt.Ollivanders.Effects;
 import me.cakenggt.Ollivanders.OEffect;
 import me.cakenggt.Ollivanders.Ollivanders;
+import org.bukkit.entity.Player;
 
-public class SILENCIO extends OEffect implements Effect{
+public class SILENCIO extends OEffect implements Effect {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 55811898971448690L;
 
@@ -20,5 +19,5 @@ public class SILENCIO extends OEffect implements Effect{
 	public void checkEffect(Ollivanders p, Player owner) {
 		age(1);
 	}
-	
+
 }

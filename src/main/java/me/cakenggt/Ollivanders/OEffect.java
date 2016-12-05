@@ -1,12 +1,11 @@
 package me.cakenggt.Ollivanders;
 
+import org.bukkit.entity.Player;
+
 import java.io.Serializable;
 import java.util.UUID;
 
-import org.bukkit.entity.Player;
-
-public class OEffect implements Serializable{
-	
+public class OEffect implements Serializable {
 	/**
 	 * Effect object stored in OPlayer
 	 */
@@ -15,20 +14,20 @@ public class OEffect implements Serializable{
 	public UUID casterUUID;
 	public int duration;
 	public boolean kill;
-	
-	public OEffect(Player sender, Effects effect, int duration){
+
+	public OEffect(Player sender, Effects effect, int duration) {
 		casterUUID = sender.getUniqueId();
 		this.duration = duration;
 		name = effect;
 		kill = false;
 	}
-	
+
 	/**
 	 * Ages the OEffect
 	 */
-	public void age(int i){
+	public void age(int i) {
 		duration -= i;
-		if (duration < 0){
+		if(duration < 0) {
 			kill();
 		}
 	}
@@ -36,14 +35,16 @@ public class OEffect implements Serializable{
 	/**
 	 * This kills the effect.
 	 */
-	public void kill(){
+	public void kill() {
 		kill = true;
 	}
-	
-	/**Returns the caster's UUID
+
+	/**
+	 * Returns the caster's UUID
+	 *
 	 * @return UUID
 	 */
-	public UUID getCasterUUID(){
+	public UUID getCasterUUID() {
 		return casterUUID;
 	}
 }

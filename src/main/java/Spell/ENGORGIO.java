@@ -1,5 +1,8 @@
 package Spell;
 
+import me.cakenggt.Ollivanders.Ollivanders;
+import me.cakenggt.Ollivanders.SpellProjectile;
+import me.cakenggt.Ollivanders.Spells;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -7,46 +10,45 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Zombie;
 
-import me.cakenggt.Ollivanders.Ollivanders;
-import me.cakenggt.Ollivanders.SpellProjectile;
-import me.cakenggt.Ollivanders.Spells;
-
-/**Makes certain entities grow into adults, slimes grow larger, and at
+/**
+ * Makes certain entities grow into adults, slimes grow larger, and at
  * usesModifier 10, zombies grow into giants
- * @author lownes
  *
+ * @author lownes
  */
-public class ENGORGIO extends SpellProjectile implements Spell{
-
-	public ENGORGIO(Ollivanders plugin, Player player, Spells name,
-			Double rightWand) {
+public class ENGORGIO extends SpellProjectile implements Spell {
+	public ENGORGIO(Ollivanders plugin, Player player, Spells name, Double rightWand) {
 		super(plugin, player, name, rightWand);
 	}
 
 	public void checkEffect() {
 		move();
-		for (LivingEntity live : getLivingEntities(1)){
-			if (live instanceof Ageable){
-				Ageable age = (Ageable)live;
-				age.setAge((int)(age.getAge()+(usesModifier*240)));
+
+		for(LivingEntity live : getLivingEntities(1)) {
+			if(live instanceof Ageable) {
+				Ageable age = (Ageable) live;
+				age.setAge((int) (age.getAge() + (usesModifier * 240)));
 			}
-			if (live instanceof Zombie){
-				Zombie zombie = (Zombie)live;
-				if (zombie.isBaby()){
+
+			if(live instanceof Zombie) {
+				Zombie zombie = (Zombie) live;
+
+				if(zombie.isBaby()) {
 					zombie.setBaby(false);
 				}
-				else if (usesModifier >= 10){
+				else if(usesModifier >= 10) {
 					zombie.getWorld().spawnEntity(zombie.getLocation(), EntityType.GIANT);
 					zombie.remove();
 				}
 			}
-			if (live instanceof Slime){
-				Slime slime = (Slime)live;
-				slime.setSize((int)(slime.getSize()+usesModifier));
+
+			if(live instanceof Slime) {
+				Slime slime = (Slime) live;
+				slime.setSize((int) (slime.getSize() + usesModifier));
 			}
+
 			kill();
 			return;
 		}
 	}
-	
 }

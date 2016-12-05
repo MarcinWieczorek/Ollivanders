@@ -4,14 +4,15 @@ import me.cakenggt.Ollivanders.Effects;
 import me.cakenggt.Ollivanders.OEffect;
 import me.cakenggt.Ollivanders.Ollivanders;
 
-/**Grants player flight
- * @author lownes
+/**
+ * Grants player flight
  *
+ * @author lownes
  */
 public class VENTO_FOLIO extends OEffect implements Effect {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 2762063364036796900L;
 
@@ -22,11 +23,11 @@ public class VENTO_FOLIO extends OEffect implements Effect {
 	@Override
 	public void checkEffect(Ollivanders p, org.bukkit.entity.Player owner) {
 		age(1);
-		if (duration > 1){
+		if(duration > 1) {
 			owner.setAllowFlight(true);
 			owner.getWorld().playEffect(owner.getLocation(), org.bukkit.Effect.SMOKE, 4);
 		}
-		else{
+		else {
 			owner.setAllowFlight(false);
 		}
 	}

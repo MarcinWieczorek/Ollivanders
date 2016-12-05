@@ -2,13 +2,12 @@ package Spell;
 
 /**
  * Interface for all spells
- * @author lownes
  *
+ * @author lownes
  */
-public interface Spell{
-	
+public interface Spell {
 	/**
 	 * This is the spell's effect. move() must be called in this if you want the projectile to move.
 	 */
-	public void checkEffect();
+	void checkEffect();
 }

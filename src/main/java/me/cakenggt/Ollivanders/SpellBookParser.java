@@ -1,10 +1,5 @@
 package me.cakenggt.Ollivanders;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,12 +8,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Provides the methods to parse a book for spells
- * @author cakenggt
  *
+ * @author cakenggt
  */
-public class SpellBookParser{
+public class SpellBookParser {
 
 	public final static String ACCIO = "Accio will pull an item toward you. The strength "
 			+ "of the pull is determined by your experience.";
@@ -281,21 +281,24 @@ public class SpellBookParser{
 
 	/**
 	 * Encodes in the lore of the book the spells and levels the author is at
-	 * @param p - The plugin
-	 * @param player - The author
-	 * @param meta - The BookMeta of the book
-	 * @return newMeta - The new BookMeta of the book, which is passed to the event
+	 *
+	 * @param p      The plugin
+	 * @param player The author
+	 * @param meta   The BookMeta of the book
+	 * @return newMeta The new BookMeta of the book, which is passed to the event
 	 */
-	public static BookMeta encode(Ollivanders p, Player player, BookMeta meta){
+	public static BookMeta encode(Ollivanders p, Player player, BookMeta meta) {
 		String pageString = getPageString(meta);
 		List<String> spellStrings = spellList();
-		List<String> lore = new ArrayList<String>();
-		for (String spell : spellStrings){
-			if (pageString.contains(spell)){
+		List<String> lore = new ArrayList<>();
+
+		for(String spell : spellStrings) {
+			if(pageString.contains(spell)) {
 				String newLore = Spells.firstLetterCapitalize(spell) + ":" + p.getSpellNum(player, Spells.decode(spell));
 				lore.add(newLore);
 			}
 		}
+
 		BookMeta newMeta = meta.clone();
 		newMeta.setLore(lore);
 		return newMeta;
@@ -303,15 +306,18 @@ public class SpellBookParser{
 
 	/**
 	 * Gets a lowercase string composed of all pages of the book
+	 *
 	 * @param meta BookMeta from PlayerEditBookEvent.getNewBookMeta()
 	 * @return String in lowercase of all page text
 	 */
-	private static String getPageString(BookMeta meta){
+	private static String getPageString(BookMeta meta) {
 		List<String> pages = meta.getPages();
 		String pageString = "";
-		for (String page : pages){
+
+		for(String page : pages) {
 			pageString = pageString.concat(page);
 		}
+
 		pageString = pageString.toLowerCase();
 		pageString = pageString.replace('\n', ' ');
 		return pageString;
@@ -319,39 +325,47 @@ public class SpellBookParser{
 
 	/**
 	 * Gets a list of all Spells converted into lower case and spaces for underscores
+	 *
 	 * @return List of strings of human readable spells
 	 */
-	private static List<String> spellList(){
+	private static List<String> spellList() {
 		Spells[] spellsList = Spells.values();
-		List<String> spellStrings = new ArrayList<String>();
-		for (Spells spell : spellsList){
+		List<String> spellStrings = new ArrayList<>();
+
+		for(Spells spell : spellsList) {
 			spellStrings.add(Spells.recode(spell));
 		}
+
 		return spellStrings;
 	}
 
 	/**
 	 * Takes a book and decodes the spells in lore, if any, into player uses
-	 * @param p - The Plugin
-	 * @param player - The player reading the book
-	 * @param imeta - The book's metadata
+	 *
+	 * @param p      The Plugin
+	 * @param player The player reading the book
+	 * @param imeta  The book's metadata
 	 */
-	public static void decode(Ollivanders p, Player player, ItemMeta imeta){
-		if (imeta.hasLore()){
+	public static void decode(Ollivanders p, Player player, ItemMeta imeta) {
+		if(imeta.hasLore()) {
 			List<String> lore = imeta.getLore();
 			String[] line;
 			int bookNum;
 			int pSpellNum;
-			Spells spell = null;
-			for (String s : lore){
+			Spells spell;
+
+			for(String s : lore) {
 				line = s.split(":");
-				if (line.length == 2){
+
+				if(line.length == 2) {
 					spell = Spells.decode(line[0]);
 					bookNum = Integer.parseInt(line[1]);
-					if (spell != null){
+
+					if(spell != null) {
 						pSpellNum = p.getSpellNum(player, spell);
-						if (pSpellNum < bookNum){
-							p.setSpellNum(player, spell, (int)(pSpellNum+((bookNum-pSpellNum)/2)));
+
+						if(pSpellNum < bookNum) {
+							p.setSpellNum(player, spell, pSpellNum + ((bookNum - pSpellNum) / 2));
 						}
 					}
 				}
@@ -361,13 +375,15 @@ public class SpellBookParser{
 
 	/**
 	 * This creates the books for the /Okit command
-	 * @param amount - number of copies of each book
-	 * @return - A list of books
+	 *
+	 * @param amount number of copies of each book
+	 * @return A list of books
 	 */
-	public static List<ItemStack> makeBooks(int amount){
+	public static List<ItemStack> makeBooks(int amount) {
 		Map<String, String> bookMap = books();
-		List<ItemStack> books = new ArrayList<ItemStack>();
-		for (String title : bookMap.keySet()){
+		List<ItemStack> books = new ArrayList<>();
+
+		for(String title : bookMap.keySet()) {
 			ItemStack item = new ItemStack(Material.WRITTEN_BOOK, 1);
 			BookMeta bm = (BookMeta) item.getItemMeta();
 			bm.setAuthor("cakenggt");
@@ -378,6 +394,7 @@ public class SpellBookParser{
 			item.setAmount(amount);
 			books.add(item);
 		}
+
 		//code for the debug book
 		ItemStack item = new ItemStack(Material.WRITTEN_BOOK, 1);
 		BookMeta bm = (BookMeta) item.getItemMeta();
@@ -385,9 +402,11 @@ public class SpellBookParser{
 		bm.setAuthor("cakenggt");
 		bm.setTitle(title);
 		String inside = "";
-		for (String str : spellList()){
+
+		for(String str : spellList()) {
 			inside += str + " ";
 		}
+
 		bm.setPages(splitEqually(inside, 250));
 		bm = kitEncode(bm, 200);
 		item.setItemMeta(bm);
@@ -398,34 +417,40 @@ public class SpellBookParser{
 
 	/**
 	 * This splits a string into equal segments.
-	 * @param text
-	 * @param size
+	 *
+	 * @param text text
+	 * @param size size
 	 * @return List of strings of size size or less
 	 */
 	public static List<String> splitEqually(String text, int size) {
-		List<String> ret = new ArrayList<String>((text.length() + size - 1) / size);
-		for (int start = 0; start < text.length(); start += size) {
+		List<String> ret = new ArrayList<>((text.length() + size - 1) / size);
+
+		for(int start = 0; start < text.length(); start += size) {
 			ret.add(text.substring(start, Math.min(text.length(), start + size)));
 		}
+
 		return ret;
 	}
 
 	/**
 	 * Encodes in the lore of the book the spells and levels specified in the kit
-	 * @param meta - The BookMeta of the book
+	 *
+	 * @param meta  - The BookMeta of the book
 	 * @param level - The level to encode the spells in
 	 * @return newMeta - The new BookMeta of the book, which is passed to the event
 	 */
-	private static BookMeta kitEncode(BookMeta meta, int level){
+	private static BookMeta kitEncode(BookMeta meta, int level) {
 		String pageString = getPageString(meta);
 		List<String> spellStrings = spellList();
-		List<String> lore = new ArrayList<String>();
-		for (String spell : spellStrings){
-			if (pageString.contains(spell)){
+		List<String> lore = new ArrayList<>();
+
+		for(String spell : spellStrings) {
+			if(pageString.contains(spell)) {
 				String newLore = spell + ":" + level;
 				lore.add(newLore);
 			}
 		}
+
 		BookMeta newMeta = meta.clone();
 		newMeta.setLore(lore);
 		return newMeta;
@@ -433,11 +458,12 @@ public class SpellBookParser{
 
 	/**
 	 * Returns a map of all books mapped to their titles
+	 *
 	 * @return Map whose keys are the titles, entries are the book text
 	 */
 	@SuppressWarnings("deprecation")
-	public static Map<String, String> books(){
-		Map<String, String> bookMap = new HashMap<String, String>();
+	public static Map<String, String> books() {
+		Map<String, String> bookMap = new HashMap<>();
 		final String N = "\n";
 		bookMap.put("Achievements in Charming",
 				AGUAMENTI + N + EBUBLIO + N + HERBIVICUS + N +
@@ -597,23 +623,13 @@ public class SpellBookParser{
 				+ "Wolfsbane Potion will relieve you of the effects of Lycanthropy for as long as "
 				+ "it is active. It is not a cure, but a treatment. This potion is brewed with 2 "
 				+ "spider eyes and 3 rotten flesh.");
+
 		FileConfiguration config = Bukkit.getPluginManager().getPlugin("Ollivanders").getConfig();
-		if (config.getBoolean("divination")){
-			bookMap.put("Unfogging the Future", 
-					"Divination is a complex and monumental area of study for "
-					+ "any Seer to undertake. To divine the future, you need to "
-					+ "have a crystal ball to look into. This instrument can be "
-					+ "represented by any block of " + Material.getMaterial(config.getInt("divinationBlock"))
-					+ ". Once you have this block set in front of you, sneak and "
-					+ "stare into it." + N + "Your level of curiosity will determine roughly "
-					+ "how long you will have to stare until you receive a prophecy. "
-					+ "Your level of curiosity can be heightened by casting a certain "
-					+ "spell which tells you information about it's targets." + N 
-					+ "If you are holding a stack of " + Material.getMaterial(config.getInt("divinationBlock"))
-					+ " in your hand when you receive a prophecy, one of them will "
-					+ "become a prophecy record and it's lore will contain the prophecy "
-					+ "you received.");
+
+		if(config.getBoolean("divination")) {
+			bookMap.put("Unfogging the Future", "Divination is a complex and monumental area of study for " + "any Seer to undertake. To divine the future, you need to " + "have a crystal ball to look into. This instrument can be " + "represented by any block of " + Material.getMaterial(config.getInt("divinationBlock")) + ". Once you have this block set in front of you, sneak and " + "stare into it." + N + "Your level of curiosity will determine roughly " + "how long you will have to stare until you receive a prophecy. " + "Your level of curiosity can be heightened by casting a certain " + "spell which tells you information about it's targets." + N + "If you are holding a stack of " + Material.getMaterial(config.getInt("divinationBlock")) + " in your hand when you receive a prophecy, one of them will " + "become a prophecy record and it's lore will contain the prophecy " + "you received.");
 		}
+
 		return bookMap;
 	}
 }

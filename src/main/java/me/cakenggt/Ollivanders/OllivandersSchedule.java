@@ -1,16 +1,10 @@
 package me.cakenggt.Ollivanders;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
-import java.util.UUID;
-
+import Effect.Effect;
+import Effect.VENTO_FOLIO;
+import Spell.Spell;
+import StationarySpell.REPELLO_MUGGLETON;
+import StationarySpell.StationarySpell;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -24,21 +18,26 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
-import Effect.Effect;
-import Effect.VENTO_FOLIO;
-import Spell.Spell;
-import StationarySpell.REPELLO_MUGGLETON;
-import StationarySpell.StationarySpell;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Scheduler for Ollivanders
- * @author lownes
  *
+ * @author lownes
  */
-class OllivandersSchedule implements Runnable{
+class OllivandersSchedule implements Runnable {
 	Ollivanders p;
 	int counter = 0;
-	static Set<UUID> flying = new HashSet<UUID>();
+	static Set<UUID> flying = new HashSet<>();
+
 	public OllivandersSchedule(Ollivanders plugin) {
 		p = plugin;
 	}
@@ -48,30 +47,35 @@ class OllivandersSchedule implements Runnable{
 		oeffectSched();
 		stationarySched();
 		broomSched();
-		if (counter %20 == 0){
+		if(counter % 20 == 0) {
 			itemCurseSched();
 		}
-		if (counter %20 == 1){
+
+		if(counter % 20 == 1) {
 			invisPlayer();
 		}
-		if (counter %20 == 2 && p.getConfig().getBoolean("divination")){
+
+		if(counter % 20 == 2 && p.getConfig().getBoolean("divination")) {
 			scry();
 			effectProphecy();
 		}
-		counter = (counter+1)%20;
+
+		counter = (counter + 1) % 20;
 	}
 
-	/**Scheduling method that calls checkEffect() on all SpellProjectile objects
+	/**
+	 * Scheduling method that calls checkEffect() on all SpellProjectile objects
 	 * and removes those that have kill set to true.
-	 * 
 	 */
-	private void projectileSched(){
+	private void projectileSched() {
 		List<SpellProjectile> projectiles = p.getProjectiles();
-		List<SpellProjectile> projectiles2 = new ArrayList<SpellProjectile>(projectiles);
-		if (projectiles2.size() > 0){
-			for (SpellProjectile proj : projectiles2){
+		List<SpellProjectile> projectiles2 = new ArrayList<>(projectiles);
+
+		if(projectiles2.size() > 0) {
+			for(SpellProjectile proj : projectiles2) {
 				((Spell) proj).checkEffect();
-				if (proj.kill){
+
+				if(proj.kill) {
 					p.remProjectile(proj);
 				}
 			}
@@ -82,15 +86,19 @@ class OllivandersSchedule implements Runnable{
 	 * Scheduling method that calls checkEffect on all OEffect objects associated with every player
 	 * and removes those that have kill set to true.
 	 */
-	private void oeffectSched(){
+	private void oeffectSched() {
 		Collection<Player> onlinePlayers = Ollivanders.getOnlinePlayers();
-		for (UUID name : p.getOPlayerMap().keySet()){
+
+		for(UUID name : p.getOPlayerMap().keySet()) {
 			OPlayer oply = p.getOPlayerMap().get(name);
-			if (oply.getEffects() != null && onlinePlayers.contains(p.getServer().getPlayer(name))){
-				List<OEffect> effects2 = new ArrayList<OEffect>(oply.getEffects());
-				for (OEffect effect : effects2){
+
+			if(oply.getEffects() != null && onlinePlayers.contains(p.getServer().getPlayer(name))) {
+				List<OEffect> effects2 = new ArrayList<>(oply.getEffects());
+
+				for(OEffect effect : effects2) {
 					((Effect) effect).checkEffect(p, Bukkit.getPlayer(name));
-					if (effect.kill){
+
+					if(effect.kill) {
 						oply.remEffect(effect);
 					}
 				}
@@ -102,15 +110,17 @@ class OllivandersSchedule implements Runnable{
 	 * Scheduling method that calls checkEffect on all StationarySpellObj objects associated with every player
 	 * and removes those that have kill set to true.
 	 */
-	private void stationarySched(){
+	private void stationarySched() {
 		List<StationarySpellObj> stationary = p.getStationary();
-		List<StationarySpellObj> stationary2 = new ArrayList<StationarySpellObj>(stationary);
-		if (stationary2.size() > 0){
-			for (StationarySpellObj stat : stationary2){
-				if (stat.active){
+		List<StationarySpellObj> stationary2 = new ArrayList<>(stationary);
+
+		if(stationary2.size() > 0) {
+			for(StationarySpellObj stat : stationary2) {
+				if(stat.active) {
 					((StationarySpell) stat).checkEffect(p);
 				}
-				if (stat.kill){
+
+				if(stat.kill) {
 					p.remStationary(stat);
 				}
 			}
@@ -122,134 +132,153 @@ class OllivandersSchedule implements Runnable{
 	 * flagrante curses on items in player inventories and
 	 * performs their effect.
 	 */
-	private void itemCurseSched(){
-		for (World world : p.getServer().getWorlds()){
-			for (Player player : world.getPlayers()){
-				List<ItemStack> geminioIS = new ArrayList<ItemStack>();
+	private void itemCurseSched() {
+		for(World world : p.getServer().getWorlds()) {
+			for(Player player : world.getPlayers()) {
+				List<ItemStack> geminioIS = new ArrayList<>();
 				ListIterator<ItemStack> invIt = player.getInventory().iterator();
-				while (invIt.hasNext()){
+
+				while(invIt.hasNext()) {
 					ItemStack item = invIt.next();
-					if (item != null){
+					if(item != null) {
 						ItemMeta meta = item.getItemMeta();
-						if (meta.hasLore()){
+
+						if(meta.hasLore()) {
 							List<String> lored = meta.getLore();
-							for (String lore : lored){
-								if (lore.contains("Geminio ")){
+
+							for(String lore : lored) {
+								if(lore.contains("Geminio ")) {
 									geminioIS.add(geminio(item.clone()));
 									invIt.set(null);
 								}
-								if (lore.contains("Flagrante ")){
+
+								if(lore.contains("Flagrante ")) {
 									flagrante(player, item);
 								}
 							}
 						}
 					}
 				}
-				HashMap<Integer, ItemStack> leftover = player.getInventory().addItem(geminioIS.toArray(new ItemStack[geminioIS.size()]));
-				for (ItemStack item : leftover.values()){
+
+				Map<Integer, ItemStack> leftover = player.getInventory().addItem(geminioIS.toArray(new ItemStack[geminioIS.size()]));
+
+				for(ItemStack item : leftover.values()) {
 					player.getWorld().dropItem(player.getLocation(), item);
 				}
 			}
 		}
 	}
 
-	/** Enacts the geminio duplicating effect on an itemstack
+	/**
+	 * Enacts the geminio duplicating effect on an itemstack
+	 *
 	 * @param item - item with geminio curse on it
 	 * @return Duplicated itemstacks
 	 */
-	private ItemStack geminio(ItemStack item){
+	private ItemStack geminio(ItemStack item) {
 		int stackSize = item.getAmount();
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		ArrayList<String> newLore = new ArrayList<String>();
-		for (int i = 0; i < lore.size(); i++){
-			if (lore.get(i).contains("Geminio ")){
-				String[] loreParts = lore.get(i).split(" ");
+		final List<String> newLore = new ArrayList<>();
+
+		for(String aLore : lore) {
+			if(aLore.contains("Geminio ")) {
+				String[] loreParts = aLore.split(" ");
 				int magnitude = Integer.parseInt(loreParts[1]);
-				if (magnitude > 1){
-					magnitude --;
+
+				if(magnitude > 1) {
+					magnitude--;
 					newLore.add("Geminio " + magnitude);
 				}
+
 				stackSize = stackSize * 2;
 			}
-			else{
-				newLore.add(lore.get(i));
+			else {
+				newLore.add(aLore);
 			}
 		}
+
 		meta.setLore(newLore);
 		item.setItemMeta(meta);
 		item.setAmount(stackSize);
 		return item;
 	}
 
-	/**Enacts the flagrante burning effect on the player
-	 * @param item
+	/**
+	 * Enacts the flagrante burning effect on the player
+	 *
+	 * @param item item
 	 */
-	private void flagrante(Player player, ItemStack item){
+	private void flagrante(Player player, ItemStack item) {
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
 		int magnitude = 0;
-		for (int i = 0; i < lore.size(); i++){
-			if (lore.get(i).contains("Flagrante ")){
-				String[] loreParts = lore.get(i).split(" ");
+
+		for(String aLore : lore) {
+			if(aLore.contains("Flagrante ")) {
+				String[] loreParts = aLore.split(" ");
 				magnitude = Integer.parseInt(loreParts[1]);
 			}
 		}
+
 		player.damage(magnitude * 0.05 * item.getAmount());
 		player.setFireTicks(160);
 	}
 
-	/**Hides a player with the Cloak of Invisibility from other players.
+	/**
+	 * Hides a player with the Cloak of Invisibility from other players.
 	 * Also hides players in Repello Muggleton from players not in that same spell.
 	 * Also sets any Creature targeting this player to have null target.
-	 * 
 	 */
-	private void invisPlayer(){
-		for (Player player : p.getServer().getOnlinePlayers()){
+	private void invisPlayer() {
+		for(Player player : p.getServer().getOnlinePlayers()) {
 			OPlayer oplayer = p.getOPlayer(player);
 			Set<REPELLO_MUGGLETON> muggletons = new HashSet<REPELLO_MUGGLETON>();
-			for (StationarySpellObj stat : p.getStationary()){
-				if (stat instanceof REPELLO_MUGGLETON){
-					if (stat.isInside(player.getLocation()) && stat.active){
-						muggletons.add((REPELLO_MUGGLETON) stat);
-					}
+
+			for(StationarySpellObj stat : p.getStationary()) {
+				if(stat instanceof REPELLO_MUGGLETON && stat.isInside(player.getLocation()) && stat.active) {
+					muggletons.add((REPELLO_MUGGLETON) stat);
 				}
 			}
+
 			boolean hasCloak = hasCloak(player);
-			if (hasCloak || muggletons.size() > 0){
+
+			if(hasCloak || muggletons.size() > 0) {
 				oplayer.setMuggleton(true);
-				for (Player viewer : p.getServer().getOnlinePlayers()){
-					if (viewer.isPermissionSet("Ollivanders.BYPASS")){
-						if (viewer.hasPermission("Ollivanders.BYPASS")){
-							continue;
-						}
+
+				for(Player viewer : p.getServer().getOnlinePlayers()) {
+					if(viewer.isPermissionSet("Ollivanders.BYPASS") && viewer.hasPermission("Ollivanders.BYPASS")) {
+						continue;
 					}
-					if (muggletons.size() == 0){
+
+					if(muggletons.size() == 0) {
 						viewer.hidePlayer(player);
 					}
-					else{
-						for (REPELLO_MUGGLETON muggleton : muggletons){
-							if (hasCloak || (!muggleton.isInside(viewer.getLocation()) && muggleton.active)){
+					else {
+						for(REPELLO_MUGGLETON muggleton : muggletons) {
+							if(hasCloak || (!muggleton.isInside(viewer.getLocation()) && muggleton.active)) {
 								viewer.hidePlayer(player);
 								break;
 							}
-							else{
+							else {
 								viewer.showPlayer(player);
 							}
 						}
 					}
 				}
-				if (!oplayer.isInvisible()){
-					for (Entity entity : player.getWorld().getEntities()){
-						if (entity instanceof Creature){
-							Creature creature = (Creature)entity;
-							if (creature.getTarget() == player){
-								if (muggletons.size() == 0){
+
+				if(!oplayer.isInvisible()) {
+					for(Entity entity : player.getWorld().getEntities()) {
+						if(entity instanceof Creature) {
+							Creature creature = (Creature) entity;
+
+							if(creature.getTarget() == player) {
+								if(muggletons.size() == 0) {
 									creature.setTarget(null);
 								}
-								else{
-									for (REPELLO_MUGGLETON muggleton : muggletons){
-										if (hasCloak || (!muggleton.isInside(creature.getLocation()) && muggleton.active)){
+								else {
+									for(REPELLO_MUGGLETON muggleton : muggletons) {
+										if(hasCloak || (!muggleton.isInside(creature.getLocation()) && muggleton.active)) {
 											creature.setTarget(null);
 										}
 									}
@@ -258,74 +287,84 @@ class OllivandersSchedule implements Runnable{
 						}
 					}
 				}
+
 				oplayer.setInvisible(hasCloak);
 			}
-			else if (oplayer.isInvisible() || oplayer.isMuggleton()){
-				for (Player viewer : p.getServer().getOnlinePlayers()){
+			else if(oplayer.isInvisible() || oplayer.isMuggleton()) {
+				for(Player viewer : p.getServer().getOnlinePlayers()) {
 					viewer.showPlayer(player);
 				}
+
 				oplayer.setInvisible(false);
 				oplayer.setMuggleton(false);
 			}
 		}
 	}
 
-	/**Does the player have the Cloak of Invisibility
+	/**
+	 * Does the player have the Cloak of Invisibility
+	 *
 	 * @param player - Player to be checked
 	 * @return - True if yes, false if no
 	 */
-	private boolean hasCloak(Player player){
+	private boolean hasCloak(Player player) {
 		ItemStack chestPlate = player.getInventory().getChestplate();
-		if (chestPlate != null){
-			if (chestPlate.getType() == Material.CHAINMAIL_CHESTPLATE){
-				if (chestPlate.getItemMeta().hasLore()){
-					List<String> lore = chestPlate.getItemMeta().getLore();
-					if (lore.get(0).equals("Silvery Transparent Cloak")){
-						return true;
-					}
-				}
+		if(chestPlate != null
+				&& chestPlate.getType() == Material.CHAINMAIL_CHESTPLATE
+				&& chestPlate.getItemMeta().hasLore()) {
+			List<String> lore = chestPlate.getItemMeta().getLore();
+
+			if(lore.get(0).equals("Silvery Transparent Cloak")) {
+				return true;
 			}
 		}
 		return false;
 	}
 
-	/**Checks all players to see if they will receive a prophecy
-	 * 
+	/**
+	 * Checks all players to see if they will receive a prophecy
 	 */
 	@SuppressWarnings("deprecation")
-	private void scry(){
+	private void scry() {
 		Material ball = Material.getMaterial(p.getConfig().getInt("divinationBlock"));
-		for (Player player : p.getServer().getOnlinePlayers()){
-			if (player.getTargetBlock((HashSet<Byte>) null, 100).getType() != ball || !player.isSneaking()){
+		for(Player player : p.getServer().getOnlinePlayers()) {
+			if(player.getTargetBlock((HashSet<Byte>) null, 100).getType() != ball || !player.isSneaking()) {
 				return;
 			}
+
 			double experience = p.getOPlayer(player).getSpellCount().get(Spells.INFORMOUS);
-			if (Math.random() < experience/1000.0){
+
+			if(Math.random() < experience / 1000.0) {
 				//The scrying is successful
 				Prophecy prophecy = new Prophecy(player);
 				//Prophecy prophecy = new Prophecy(player, 2000, 30000);
 				p.getProphecy().add(prophecy);
 				String message = "";
 				List<String> lore = prophecy.toLore();
-				for (String str : lore){
+
+				for(String str : lore) {
 					message = message.concat(str + " ");
 				}
+
 				player.sendMessage(ChatColor.getByChar(p.getConfig().getString("chatColor")) + message);
 				ItemStack hand = player.getItemInHand();
-				if (hand.getType() == ball){
+
+				if(hand.getType() == ball) {
 					ItemStack record = new ItemStack(ball, 1);
 					ItemMeta recordM = record.getItemMeta();
 					recordM.setDisplayName("Prophecy Record");
 					recordM.setLore(lore);
 					record.setItemMeta(recordM);
-					if (hand.getAmount() == 1){
+
+					if(hand.getAmount() == 1) {
 						player.setItemInHand(null);
 					}
-					else{
-						hand.setAmount(hand.getAmount()-1);
+					else {
+						hand.setAmount(hand.getAmount() - 1);
 						player.setItemInHand(hand);
 					}
-					for (ItemStack drop : player.getInventory().addItem(record).values()){
+
+					for(ItemStack drop : player.getInventory().addItem(record).values()) {
 						player.getWorld().dropItem(player.getLocation(), drop);
 					}
 				}
@@ -333,58 +372,62 @@ class OllivandersSchedule implements Runnable{
 		}
 	}
 
-	/**Goes through all prophecies and enacts them if they are due
+	/**
+	 * Goes through all prophecies and enacts them if they are due
 	 * and deletes them if they are past
 	 */
-	private void effectProphecy(){
+	private void effectProphecy() {
 		Iterator<Prophecy> iter = p.getProphecy().iterator();
-		while (iter.hasNext()){
+		while(iter.hasNext()) {
 			Prophecy prop = iter.next();
-			if (prop.isActive()){
+
+			if(prop.isActive()) {
 				Player player = p.getServer().getPlayer(prop.getPlayerUUID());
-				if (player != null){
+
+				if(player != null) {
 					player.addPotionEffect(prop.toPotionEffect(), true);
 				}
 			}
-			else if (prop.isFinished()){
+			else if(prop.isFinished()) {
 				iter.remove();
 			}
 		}
 	}
 
-	/**Goes through all players and sets any holding a broom to flying
-	 * 
+	/**
+	 * Goes through all players and sets any holding a broom to flying
 	 */
-	private void broomSched(){
+	private void broomSched() {
 		playerIter:
-			for (Player player : p.getServer().getOnlinePlayers()){
-				if (p.isBroom(player.getItemInHand()) && p.canLive(player.getLocation(), Spells.VOLATUS)){
-					player.setAllowFlight(true);
-					player.setFlying(true);
-					if (flying.contains(player.getUniqueId())){
-						Vector broomVec = player.getLocation().getDirection().clone();
-						broomVec.multiply(Math.sqrt(player.getItemInHand().getEnchantmentLevel(Enchantment.PROTECTION_FALL))/40.0);
-						player.setVelocity(player.getVelocity().add(broomVec));
-					}
-				}
-				else{
-					if (player.getGameMode() == GameMode.SURVIVAL){
-						for (OEffect effect : p.getOPlayer(player).getEffects()){
-							if (effect instanceof VENTO_FOLIO){
-								continue playerIter;
-							}
-						}
-						player.setAllowFlight(false);
-						player.setFlying(false);
-					}
+		for(Player player : p.getServer().getOnlinePlayers()) {
+			if(p.isBroom(player.getItemInHand()) && p.canLive(player.getLocation(), Spells.VOLATUS)) {
+				player.setAllowFlight(true);
+				player.setFlying(true);
+
+				if(flying.contains(player.getUniqueId())) {
+					Vector broomVec = player.getLocation().getDirection().clone();
+					broomVec.multiply(Math.sqrt(player.getItemInHand().getEnchantmentLevel(Enchantment.PROTECTION_FALL)) / 40.0);
+					player.setVelocity(player.getVelocity().add(broomVec));
 				}
 			}
+			else if(player.getGameMode() == GameMode.SURVIVAL) {
+				for(OEffect effect : p.getOPlayer(player).getEffects()) {
+					if(effect instanceof VENTO_FOLIO) {
+						continue playerIter;
+					}
+				}
+				player.setAllowFlight(false);
+				player.setFlying(false);
+			}
+		}
 	}
 
-	/**Get the set of flying players
+	/**
+	 * Get the set of flying players
+	 *
 	 * @return set of flying players
 	 */
-	public static Set<UUID> getFlying(){
+	public static Set<UUID> getFlying() {
 		return flying;
 	}
 }

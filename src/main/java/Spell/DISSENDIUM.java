@@ -1,18 +1,18 @@
 package Spell;
 
+import me.cakenggt.Ollivanders.Ollivanders;
+import me.cakenggt.Ollivanders.SpellProjectile;
+import me.cakenggt.Ollivanders.Spells;
+import me.cakenggt.Ollivanders.StationarySpells;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.material.MaterialData;
 import org.bukkit.material.Openable;
 
-import me.cakenggt.Ollivanders.Ollivanders;
-import me.cakenggt.Ollivanders.SpellProjectile;
-import me.cakenggt.Ollivanders.Spells;
-import me.cakenggt.Ollivanders.StationarySpells;
-
-/**Opens a trapdoor or door.
- * @author lownes
+/**
+ * Opens a trapdoor or door.
  *
+ * @author lownes
  */
 public class DISSENDIUM extends SpellProjectile implements Spell {
 
@@ -21,10 +21,9 @@ public class DISSENDIUM extends SpellProjectile implements Spell {
 	private int openTime;
 	private boolean open;
 
-	public DISSENDIUM(Ollivanders plugin, Player player, Spells name,
-			Double rightWand) {
+	public DISSENDIUM(Ollivanders plugin, Player player, Spells name, Double rightWand) {
 		super(plugin, player, name, rightWand);
-		lifeTime = usesModifier*16;
+		lifeTime = usesModifier * 16;
 		move = true;
 		openTime = 160;
 		open = true;
@@ -32,37 +31,40 @@ public class DISSENDIUM extends SpellProjectile implements Spell {
 
 	@Override
 	public void checkEffect() {
-		if (move){
+		if(move) {
 			move();
-			if (p.isInsideOf(StationarySpells.COLLOPORTUS, location)){
+
+			if(p.isInsideOf(StationarySpells.COLLOPORTUS, location)) {
 				kill();
 				return;
 			}
-			if (getBlock().getState().getData() instanceof Openable){
+
+			if(getBlock().getState().getData() instanceof Openable) {
 				kill = false;
 				move = false;
-				open = ((Openable)getBlock().getState().getData()).isOpen();
+				open = ((Openable) getBlock().getState().getData()).isOpen();
 			}
 		}
-		else{
-			openTime --;
+		else {
+			openTime--;
 			BlockState state = getBlock().getState();
-			Openable oble = (Openable)state.getData();
-			if (openTime > 0){
+			Openable oble = (Openable) state.getData();
+
+			if(openTime > 0) {
 				oble.setOpen(!open);
 				state.setData((MaterialData) oble);
 				state.update();
 			}
-			else{
+			else {
 				oble.setOpen(open);
 				state.setData((MaterialData) oble);
 				state.update();
 				kill();
 			}
 		}
-		if (lifeTicks > lifeTime){
+
+		if(lifeTicks > lifeTime) {
 			kill();
 		}
 	}
-
 }

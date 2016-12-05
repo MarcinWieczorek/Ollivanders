@@ -2,7 +2,6 @@ package me.cakenggt.Ollivanders;
 
 /**
  * Represents allowable spells.
- *
  */
 public enum Spells {
 	ACCIO,
@@ -111,69 +110,83 @@ public enum Spells {
 	VENTO_FOLIO,
 	VOLATUS,
 	WINGARDIUM_LEVIOSA;
-	
+
 	/**
 	 * Find the Spell that corresponds to a string.
+	 *
 	 * @param s - string, doesn't have to correspond to a spell
 	 * @return spell such that the spell resembles the string in spelling. null if no such spell exists
 	 */
-	public static Spells decode(String s){
+	public static Spells decode(String s) {
 		//getLogger().info(s);
 		String[] words = s.split(" ");
 		//getLogger().info(words.length);
-		for (int i = 0; i < words.length; i++){
+
+		for(int i = 0; i < words.length; i++) {
 			words[i] = words[i].toUpperCase();
 		}
+
 		//getLogger().info(words.length);
 		StringBuilder completeSB = new StringBuilder();
-		for (String word : words){
+
+		for(String word : words) {
 			completeSB.append(word);
 			completeSB.append("_");
 		}
+
 		//getLogger().info(complete);
-		String complete = completeSB.substring(0, completeSB.length()-1);
+		String complete = completeSB.substring(0, completeSB.length() - 1);
 		Spells spell;
+
 		try {
 			spell = Spells.valueOf(complete);
-		} catch (IllegalArgumentException e) {
-			spell = null;
-		} catch (NullPointerException e) {
+		}
+		catch(IllegalArgumentException | NullPointerException e) {
 			spell = null;
 		}
+
 		return spell;
 	}
-	
+
 	/**
 	 * Find the lowercase string that corresponds to a spell name
+	 *
 	 * @param s - spell
 	 * @return string such that it is the lowercase version of the spell minus underscores
 	 */
-	public static String recode(Spells s){
+	public static String recode(Spells s) {
 		String nameLow = s.toString().toLowerCase();
 		String[] words = nameLow.split("_");
 		String comp = "";
-		for (String st : words){
+
+		for(String st : words) {
 			comp = comp.concat(st);
 			comp = comp.concat(" ");
 		}
-		comp = comp.substring(0, comp.length()-1);
+
+		comp = comp.substring(0, comp.length() - 1);
 		return comp;
 	}
-	
-	/**Converts a string to have it's first letter of  each word be in upper case, and all other letters lower case.
+
+	/**
+	 * Converts a string to have it's first letter of  each word be in upper case, and all other letters lower case.
+	 *
 	 * @param str - String to convert.
 	 * @return String with correct formatting.
 	 */
-	public static String firstLetterCapitalize(String str){
+	public static String firstLetterCapitalize(String str) {
 		StringBuilder sb = new StringBuilder();
 		String[] wordList = str.split(" ");
-		for (String s : wordList){
+
+		for(String s : wordList) {
 			sb.append(s.substring(0, 1).toUpperCase());
-			if (s.length() > 1){
+			if(s.length() > 1) {
 				sb.append(s.substring(1, s.length()).toLowerCase());
 			}
+
 			sb.append(" ");
 		}
-		return sb.substring(0, sb.length()-1);
+
+		return sb.substring(0, sb.length() - 1);
 	}
 }

@@ -1,20 +1,20 @@
 package Effect;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-
 import me.cakenggt.Ollivanders.Effects;
 import me.cakenggt.Ollivanders.OEffect;
 import me.cakenggt.Ollivanders.Ollivanders;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
-/**Keeps a player hoisted 1.5 blocks into the air
- * @author lownes
+/**
+ * Keeps a player hoisted 1.5 blocks into the air
  *
+ * @author lownes
  */
 public class LEVICORPUS extends OEffect implements Effect {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1306087533238710478L;
 	Location loc;

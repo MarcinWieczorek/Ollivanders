@@ -1,15 +1,14 @@
 package Effect;
 
-import org.bukkit.entity.Player;
-
 import me.cakenggt.Ollivanders.Effects;
 import me.cakenggt.Ollivanders.OEffect;
 import me.cakenggt.Ollivanders.Ollivanders;
+import org.bukkit.entity.Player;
 
 public class MEMORY_POTION extends OEffect implements Effect {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4202743924958098780L;
 
