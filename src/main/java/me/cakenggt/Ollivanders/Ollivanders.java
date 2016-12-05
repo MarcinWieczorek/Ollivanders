@@ -44,6 +44,7 @@ import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import org.mcstats.Metrics;
 
 /**
  * Ollivanders plugin object
@@ -144,7 +145,7 @@ public class Ollivanders extends JavaPlugin{
 			getLogger().warning("Did not find prophecy.bin");
 		}
 		try {
-			MetricsLite metrics = new MetricsLite(this);
+			Metrics metrics = new Metrics(this);
 			metrics.start();
 		} catch (IOException e) {
 			// Failed to submit the stats :-(
