@@ -406,23 +406,23 @@ public class OllivandersListener implements Listener {
 									if (recipient != null){
 										if (recipient.isOnline()){
 											if (recipient.getWorld().getUID().equals(world.getUID())){
-												world.playSound(cat.getLocation(),Sound.CAT_MEOW,1, 0);
+												world.playSound(cat.getLocation(),CompatibleSound.CAT_MEOW,1, 0);
 												cat.teleport(recipient.getLocation());
 												item.teleport(recipient.getLocation());
-												world.playSound(cat.getLocation(),Sound.CAT_MEOW,1, 0);
+												world.playSound(cat.getLocation(),CompatibleSound.CAT_MEOW,1, 0);
 											}
 											else{
-												world.playSound(cat.getLocation(),Sound.CAT_HISS,1, 0);
+												world.playSound(cat.getLocation(),CompatibleSound.CAT_HISS,1, 0);
 												sender.sendMessage(ChatColor.getByChar(p.getConfig().getString("chatColor")) + splited[2] + " is not in this world.");
 											}
 										}
 										else{
-											world.playSound(cat.getLocation(),Sound.CAT_HISS,1, 0);
+											world.playSound(cat.getLocation(),CompatibleSound.CAT_HISS,1, 0);
 											sender.sendMessage(ChatColor.getByChar(p.getConfig().getString("chatColor")) + splited[2] + " is not online.");
 										}
 									}
 									else{
-										world.playSound(cat.getLocation(),Sound.CAT_HISS,1, 0);
+										world.playSound(cat.getLocation(),CompatibleSound.CAT_HISS,1, 0);
 										sender.sendMessage(ChatColor.getByChar(p.getConfig().getString("chatColor")) + splited[2] + " is not online.");
 									}
 									return;
@@ -502,7 +502,7 @@ public class OllivandersListener implements Listener {
 				Spells spell = oplayer.getSpell();
 				if (spell == null){
 					event.getPlayer().getWorld().playEffect(location, Effect.ENDER_SIGNAL, 0);
-					event.getPlayer().getWorld().playSound(location, Sound.LEVEL_UP, 1, 1);
+					event.getPlayer().getWorld().playSound(location, CompatibleSound.LEVEL_UP, 1, 1);
 				}
 			}
 			//Toggle between known spells

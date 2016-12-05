@@ -3,6 +3,7 @@ package Spell;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.cakenggt.Ollivanders.CompatibleSound;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
@@ -66,10 +67,10 @@ public class FORSKNING extends Transfiguration implements Spell{
 				double x = (double)i/candidateSpells.size();
 				double pitch = (x*x)+(0.5*x)+0.5;
 				if (Spells.decode(message) == null){
-					world.playSound(location, Sound.NOTE_PIANO, 1, (float) pitch);
+					world.playSound(location, CompatibleSound.NOTE_PIANO, 1, (float) pitch);
 				}
 				else{
-					world.playSound(location, Sound.LEVEL_UP, 1, 1);
+					world.playSound(location, CompatibleSound.LEVEL_UP, 1, 1);
 				}
 			}
 		}

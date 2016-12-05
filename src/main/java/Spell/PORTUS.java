@@ -3,6 +3,7 @@ package Spell;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.cakenggt.Ollivanders.CompatibleSound;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Item;
@@ -43,7 +44,7 @@ public class PORTUS extends SpellProjectile implements Spell{
 				if (stat instanceof StationarySpell.NULLUM_EVANESCUNT && stat.isInside(player.getLocation()) && stat.active && !stat.getPlayerUUID().equals(player.getUniqueId())){
 					stat.flair(10);
 					canApparateOut = false;
-					player.getWorld().playSound(player.getLocation(), Sound.NOTE_PIANO, 1, 1);
+					player.getWorld().playSound(player.getLocation(), CompatibleSound.NOTE_PIANO, 1, 1);
 				}
 			}
 			if (player.isPermissionSet("Ollivanders.BYPASS")){
@@ -71,7 +72,7 @@ public class PORTUS extends SpellProjectile implements Spell{
 					if (stat instanceof StationarySpell.NULLUM_APPAREBIT && stat.isInside(to) && stat.active && !stat.getPlayerUUID().equals(player.getUniqueId())){
 						stat.flair(10);
 						canApparateIn = false;
-						player.getWorld().playSound(player.getLocation(), Sound.NOTE_BASS, 1, 1);
+						player.getWorld().playSound(player.getLocation(), CompatibleSound.NOTE_BASS, 1, 1);
 					}
 				}
 				if (player.isPermissionSet("Ollivanders.BYPASS")){
