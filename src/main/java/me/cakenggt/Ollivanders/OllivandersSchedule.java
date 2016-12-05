@@ -2,6 +2,7 @@ package me.cakenggt.Ollivanders;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -82,7 +83,7 @@ class OllivandersSchedule implements Runnable{
 	 * and removes those that have kill set to true.
 	 */
 	private void oeffectSched(){
-		List<Player> onlinePlayers = Arrays.asList(p.getServer().getOnlinePlayers());
+		Collection<Player> onlinePlayers = Ollivanders.getOnlinePlayers();
 		for (UUID name : p.getOPlayerMap().keySet()){
 			OPlayer oply = p.getOPlayerMap().get(name);
 			if (oply.getEffects() != null && onlinePlayers.contains(p.getServer().getPlayer(name))){
@@ -295,7 +296,7 @@ class OllivandersSchedule implements Runnable{
 	private void scry(){
 		Material ball = Material.getMaterial(p.getConfig().getInt("divinationBlock"));
 		for (Player player : p.getServer().getOnlinePlayers()){
-			if (player.getTargetBlock(null, 100).getType() != ball || !player.isSneaking()){
+			if (player.getTargetBlock((HashSet<Byte>) null, 100).getType() != ball || !player.isSneaking()){
 				return;
 			}
 			double experience = p.getOPlayer(player).getSpellCount().get(Spells.INFORMOUS);

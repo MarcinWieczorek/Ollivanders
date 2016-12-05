@@ -6,8 +6,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
@@ -56,6 +60,15 @@ public class Ollivanders extends JavaPlugin{
 	private OllivandersSchedule schedule;
 	private List<Block> tempBlocks = new ArrayList<Block>();
 	private FileConfiguration fileConfig;
+
+	static {
+		try {
+			getOnlinePlayersMethod = Server.class.getMethod("getOnlinePlayers");
+		}
+		catch(NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void onDisable() {
 		for (Block block : tempBlocks){
@@ -756,5 +769,32 @@ public class Ollivanders extends JavaPlugin{
 			ois.close();
 			return result;
 		}
+	}
+
+	protected static Method getOnlinePlayersMethod;
+
+	/**
+	 * Gets online players
+	 *
+	 * @return Collection of online players
+	 */
+	@SuppressWarnings("unchecked")
+	public static Collection<Player> getOnlinePlayers() {
+		Collection<Player> collection = new HashSet<>();
+
+		try {
+			if(getOnlinePlayersMethod.getReturnType().equals(Collection.class)) {
+				collection = ((Collection) getOnlinePlayersMethod.invoke(Bukkit.getServer()));
+			}
+			else {
+				Player[] array = ((Player[]) getOnlinePlayersMethod.invoke(Bukkit.getServer()));
+				Collections.addAll(collection, array);
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+
+		return collection;
 	}
 }
